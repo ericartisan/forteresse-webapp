@@ -13,7 +13,7 @@
         <header class="fortress-header">
             <div class="header-content">
                 <div class="logo">
-                    <span class="eye-icon">👁</span>
+                    <span class="eye-icon">◉</span>
                     <h1>LA FORTERESSE</h1>
                 </div>
                 <div class="subtitle">Service Secret</div>
@@ -26,19 +26,19 @@
             <section id="welcome-section" class="section active">
                 <div class="welcome-content">
                     <div class="mystical-border">
-                        <h2>🔺 ESPACE INITIÉS ☽</h2>
+                        <h2>ESPACE INITIES</h2>
                         <div class="divider"></div>
                         <p class=" mystical-text">Bienvenue dans la Forteresse, initié.</p>
                         <p class=" mystical-text">Le cercle t'attend pour ton invocation.</p>
                     </div>
                     
                     <button class="fortress-btn primary" onclick="showSection('menu-section')">
-                        <span class="btn-icon">📜</span>
+                        <span class="btn-icon">+</span>
                         <span>Voir le Menu</span>
                     </button>
                     
                     <button class="fortress-btn secondary" onclick="showSection('profile-section')">
-                        <span class="btn-icon">👤</span>
+                        <span class="btn-icon">-</span>
                         <span>Mon Profil</span>
                     </button>
                 </div>
@@ -48,25 +48,25 @@
             <section id="menu-section" class="section">
                 <div class="section-header">
                     <button class="back-btn" onclick="showSection('welcome-section')">←</button>
-                    <h2>🔺 REGISTRE DES OFFRANDES</h2>
+                    <h2>REGISTRE DES OFFRANDES</h2>
                 </div>
                 
                 <div class="menu-intro">
-                    <p>⛧ PROTOCOLE DU CERCLE</p>
-                    <p>Ⅰ — Sélectionne les articles désirés</p>
-                    <p>Ⅱ — Ajuste les quantités selon ton désir</p>
-                    <p>Ⅲ — Observe ton panier se constituer</p>
-                    <p>Ⅳ — Valide la commande pour invoquer un messager</p>
+                    <p>PROTOCOLE DU CERCLE</p>
+                    <p>— Sélectionne les articles désirés</p>
+                    <p>— Ajuste les quantités selon ton désir</p>
+                    <p>— Observe ton panier se constituer</p>
+                    <p>— Valide la commande pour invoquer un messager</p>
                 </div>
 
                 <div class="menu-items">
                     <!-- Ice -->
                     <div class="menu-item" data-item="ice">
-                        <div class="item-medal">🥇</div>
-                        <div class="item-emoji">❄️</div>
+                        <div class="item-medal">I</div>
+                        <div class="item-emoji">✦</div>
                         <div class="item-info">
                             <h3>Ice</h3>
-                            <p class="item-price">70€</p>
+                            <p class="item-price">70</p>
                         </div>
                         <div class="item-controls">
                             <button class="qty-btn minus" onclick="updateQty('ice', -1)">−</button>
@@ -77,11 +77,11 @@
 
                     <!-- Flash -->
                     <div class="menu-item" data-item="flash">
-                        <div class="item-medal">🥈</div>
+                        <div class="item-medal">II</div>
                         <div class="item-emoji">⚡</div>
                         <div class="item-info">
                             <h3>Flash</h3>
-                            <p class="item-price">10€</p>
+                            <p class="item-price">10</p>
                         </div>
                         <div class="item-controls">
                             <button class="qty-btn minus" onclick="updateQty('flash', -1)">−</button>
@@ -92,11 +92,11 @@
 
                     <!-- Clover -->
                     <div class="menu-item" data-item="clover">
-                        <div class="item-medal">🥉</div>
-                        <div class="item-emoji">☘️</div>
+                        <div class="item-medal">III</div>
+                        <div class="item-emoji">☘</div>
                         <div class="item-info">
                             <h3>Clover</h3>
-                            <p class="item-price">50€</p>
+                            <p class="item-price">50</p>
                         </div>
                         <div class="item-controls">
                             <button class="qty-btn minus" onclick="updateQty('clover', -1)">−</button>
@@ -109,14 +109,14 @@
                 <!-- Cart Summary -->
                 <div class="cart-summary">
                     <div class="cart-header">
-                        <span>⛧ PANIER DU CERCLE</span>
-                        <span class="total-price" id="total-price">0€</span>
+                        <span>PANIER DU CERCLE</span>
+                        <span class="total-price" id="total-price">0</span>
                     </div>
                     <div class="cart-items" id="cart-items">
                         <p class="empty-cart">Panier vide</p>
                     </div>
                     <button class="fortress-btn primary full-width" onclick="proceedToOrder()">
-                        <span class="btn-icon">🔥</span>
+                        <span class="btn-icon">⚡</span>
                         <span>Valider l'invocation</span>
                     </button>
                 </div>
@@ -126,36 +126,36 @@
             <section id="order-section" class="section">
                 <div class="section-header">
                     <button class="back-btn" onclick="showSection('menu-section')">←</button>
-                    <h2>📍 Localisation</h2>
+                    <h2>LOCALISATION</h2>
                 </div>
 
                 <div class="order-form">
                     <div class="form-group">
-                        <label>📍 Adresse complète</label>
+                        <label>Adresse complete</label>
                         <input type="text" id="address" placeholder="Numéro, rue, code postal">
                     </div>
 
                     <div class="form-group">
-                        <label>🔐 Digicode</label>
+                        <label>Digicode</label>
                         <input type="text" id="digicode" placeholder="Code de l'immeuble">
                     </div>
 
                     <div class="form-group">
-                        <label>🔔 Interphone (optionnel)</label>
+                        <label>Interphone (optionnel)</label>
                         <input type="text" id="interphone" placeholder="Nom à sonner">
                     </div>
 
                     <div class="order-summary">
-                        <h3>🔺 RÉCAPITULATIF</h3>
+                        <h3>RECAPITULATIF</h3>
                         <div id="order-items-summary"></div>
                         <div class="total-line">
-                            <span>💰 Total scellé :</span>
-                            <span id="order-total">0€</span>
+                            <span>Total scellé :</span>
+                            <span id="order-total">0</span>
                         </div>
                     </div>
 
                     <button class="fortress-btn primary full-width" onclick="submitOrder()">
-                        <span class="btn-icon">🔥</span>
+                        <span class="btn-icon">⚡</span>
                         <span>Sceller l'invocation</span>
                     </button>
                 </div>
@@ -165,49 +165,49 @@
             <section id="profile-section" class="section">
                 <div class="section-header">
                     <button class="back-btn" onclick="showSection('welcome-section')">←</button>
-                    <h2>👤 Profil de l'Initié</h2>
+                    <h2>PROFIL DE L'INITIE</h2>
                 </div>
 
                 <div class="profile-card">
                     <div class="profile-header">
-                        <div class="profile-avatar">👁</div>
+                        <div class="profile-avatar">◉</div>
                         <div class="profile-info">
-                            <h3 id="profile-username">@Initié</h3>
-                            <p class="profile-status">Client Vérifié</p>
+                            <h3 id="profile-username">@Initie</h3>
+                            <p class="profile-status">Client Verifie</p>
                         </div>
                     </div>
 
                     <div class="profile-stats">
                         <div class="stat-item">
-                            <span class="stat-icon">📦</span>
+                            <span class="stat-icon">◉</span>
                             <span class="stat-value" id="order-count">0</span>
                             <span class="stat-label">Commandes</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-icon">⭐</span>
+                            <span class="stat-icon">★</span>
                             <span class="stat-value" id="loyalty-stars">☆☆☆☆☆</span>
-                            <span class="stat-label">Fidélité</span>
+                            <span class="stat-label">Fidelite</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-icon">👥</span>
+                            <span class="stat-icon">◉</span>
                             <span class="stat-value" id="ref-count">0</span>
                             <span class="stat-label">Parrainages</span>
                         </div>
                     </div>
 
                     <div class="profile-code">
-                        <p>✺ Code personnel :</p>
+                        <p>Code personnel :</p>
                         <div class="code-display" id="personal-code">CLI-XXXX-XXXX</div>
-                        <p class="code-warning">👁‍🗨 Ne le partage jamais</p>
+                        <p class="code-warning">Ne le partage jamais</p>
                     </div>
 
                     <div class="profile-actions">
                         <button class="fortress-btn secondary" onclick="showReferral()">
-                            <span class="btn-icon">👥</span>
+                            <span class="btn-icon">+</span>
                             <span>Parrainer un initié</span>
                         </button>
                         <button class="fortress-btn secondary" onclick="showSupport()">
-                            <span class="btn-icon">📩</span>
+                            <span class="btn-icon">•</span>
                             <span>Contacter la Forteresse</span>
                         </button>
                     </div>
@@ -217,12 +217,12 @@
             <!-- Loading Section -->
             <section id="loading-section" class="section">
                 <div class="loading-content">
-                    <div class="loading-eye">👁</div>
-                    <h2>⟁ INVOCATION EN COURS</h2>
+                    <div class="loading-eye">◉</div>
+                    <h2>INVOCATION EN COURS</h2>
                     <div class="loading-steps">
-                        <div class="loading-step active" id="step1">🔎 Recherche d'un messager...</div>
-                        <div class="loading-step" id="step2">⚡ Signal envoyé...</div>
-                        <div class="loading-step" id="step3">🜂 Invocation en attente de réponse...</div>
+                        <div class="loading-step active" id="step1">Recherche d'un messager...</div>
+                        <div class="loading-step" id="step2">Signal envoyé...</div>
+                        <div class="loading-step" id="step3">Invocation en attente de réponse...</div>
                     </div>
                 </div>
             </section>
@@ -230,12 +230,12 @@
             <!-- Success Section -->
             <section id="success-section" class="section">
                 <div class="success-content">
-                    <div class="success-icon">✅</div>
-                    <h2>⟁ INVOCATION SCELLÉE</h2>
+                    <div class="success-icon">◉</div>
+                    <h2>INVOCATION SCELLEE</h2>
                     <p>La Forteresse a reçu ton invocation.</p>
                     <p>Un messager sera bientôt assigné.</p>
                     <button class="fortress-btn primary" onclick="resetApp()">
-                        <span class="btn-icon">🔄</span>
+                        <span class="btn-icon">↻</span>
                         <span>Nouvelle Invocation</span>
                     </button>
                 </div>
