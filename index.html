@@ -22,32 +22,66 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Welcome Section -->
-            <section id="welcome-section" class="section active">
-                <div class="welcome-content">
+            <!-- Auth Section -->
+            <section id="auth-section" class="section active">
+                <div class="auth-content">
                     <div class="mystical-border">
-                        <h2>ESPACE INITIES</h2>
+                        <h2>IDENTIFICATION</h2>
                         <div class="divider"></div>
-                        <p class=" mystical-text">Bienvenue dans la Forteresse, initié.</p>
-                        <p class=" mystical-text">Le cercle t'attend pour ton invocation.</p>
+                        <p class="mystical-text">Entre ton sceau d'accès pour entrer dans la Forteresse.</p>
+                        <p class="mystical-text">Les codes sont personnels et confidentiels.</p>
                     </div>
                     
-                    <button class="fortress-btn primary" onclick="showSection('menu-section')">
+                    <div class="auth-form">
+                        <div class="form-group">
+                            <label>SCEAU D'ACCÈS</label>
+                            <input type="password" id="auth-code" placeholder="••••••••" maxlength="20">
+                        </div>
+                        
+                        <button class="fortress-btn primary" onclick="authenticate()">
+                            <span class="btn-icon">◉</span>
+                            <span>ENTRER DANS LA FORTERESSE</span>
+                        </button>
+                        
+                        <div class="auth-error" id="auth-error"></div>
+                    </div>
+                    
+                    <div class="auth-hint">
+                        <p class="hint-text">Codes d'accès :</p>
+                        <p class="hint-text">CLIENT1 — Client</p>
+                        <p class="hint-text">LIVREUR75001 — Livreur</p>
+                        <p class="hint-text">RAVITAILLEUR666 — Ravitailleur</p>
+                        <p class="hint-text">adminfafa666 — Admin</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Client Welcome Section -->
+            <section id="client-welcome-section" class="section">
+                <div class="welcome-content">
+                    <div class="mystical-border">
+                        <h2>ESPACE CLIENT</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">Bienvenue dans la Forteresse, initié.</p>
+                        <p class="mystical-text">Le cercle t'attend pour ton invocation.</p>
+                    </div>
+                    
+                    <button class="fortress-btn primary" onclick="showSection('client-menu-section')">
                         <span class="btn-icon">+</span>
                         <span>Voir le Menu</span>
                     </button>
                     
-                    <button class="fortress-btn secondary" onclick="showSection('profile-section')">
+                    <button class="fortress-btn secondary" onclick="showSection('client-profile-section')">
                         <span class="btn-icon">-</span>
                         <span>Mon Profil</span>
                     </button>
                 </div>
             </section>
 
-            <!-- Menu Section -->
-            <section id="menu-section" class="section">
+            <!-- Client Menu Section -->
+            <section id="client-menu-section" class="section">
                 <div class="section-header">
-                    <button class="back-btn" onclick="showSection('welcome-section')">←</button>
+                    <button class="back-btn" onclick="showSection('client-welcome-section')">←</button>
                     <h2>REGISTRE DES OFFRANDES</h2>
                 </div>
                 
@@ -122,31 +156,31 @@
                 </div>
             </section>
 
-            <!-- Order Section -->
-            <section id="order-section" class="section">
+            <!-- Client Order Section -->
+            <section id="client-order-section" class="section">
                 <div class="section-header">
-                    <button class="back-btn" onclick="showSection('menu-section')">←</button>
+                    <button class="back-btn" onclick="showSection('client-menu-section')">←</button>
                     <h2>LOCALISATION</h2>
                 </div>
 
                 <div class="order-form">
                     <div class="form-group">
-                        <label>Adresse complete</label>
+                        <label>ADRESSE COMPLÈTE</label>
                         <input type="text" id="address" placeholder="Numéro, rue, code postal">
                     </div>
 
                     <div class="form-group">
-                        <label>Digicode</label>
+                        <label>DIGICODE</label>
                         <input type="text" id="digicode" placeholder="Code de l'immeuble">
                     </div>
 
                     <div class="form-group">
-                        <label>Interphone (optionnel)</label>
+                        <label>INTERPHONE (OPTIONNEL)</label>
                         <input type="text" id="interphone" placeholder="Nom à sonner">
                     </div>
 
                     <div class="order-summary">
-                        <h3>RECAPITULATIF</h3>
+                        <h3>RÉCAPITULATIF</h3>
                         <div id="order-items-summary"></div>
                         <div class="total-line">
                             <span>Total scellé :</span>
@@ -161,11 +195,11 @@
                 </div>
             </section>
 
-            <!-- Profile Section -->
-            <section id="profile-section" class="section">
+            <!-- Client Profile Section -->
+            <section id="client-profile-section" class="section">
                 <div class="section-header">
-                    <button class="back-btn" onclick="showSection('welcome-section')">←</button>
-                    <h2>PROFIL DE L'INITIE</h2>
+                    <button class="back-btn" onclick="showSection('client-welcome-section')">←</button>
+                    <h2>PROFIL DE L'INITIÉ</h2>
                 </div>
 
                 <div class="profile-card">
@@ -173,7 +207,7 @@
                         <div class="profile-avatar">◉</div>
                         <div class="profile-info">
                             <h3 id="profile-username">@Initie</h3>
-                            <p class="profile-status">Client Verifie</p>
+                            <p class="profile-status">Client Vérifié</p>
                         </div>
                     </div>
 
@@ -186,7 +220,7 @@
                         <div class="stat-item">
                             <span class="stat-icon">★</span>
                             <span class="stat-value" id="loyalty-stars">☆☆☆☆☆</span>
-                            <span class="stat-label">Fidelite</span>
+                            <span class="stat-label">Fidélité</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-icon">◉</span>
@@ -214,6 +248,288 @@
                 </div>
             </section>
 
+            <!-- Driver Welcome Section -->
+            <section id="driver-welcome-section" class="section">
+                <div class="welcome-content">
+                    <div class="mystical-border">
+                        <h2>ESPACE LIVREUR</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">— Identité reconnue : @username</p>
+                        <p class="mystical-text">— Statut : Livreur</p>
+                    </div>
+                    
+                    <div class="mystical-border">
+                        <h2>RÈGLES DE LA FORTERESSE</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">— Ne donne ton code à personne.</p>
+                        <p class="mystical-text">— Reste discret dans chaque mission.</p>
+                        <p class="mystical-text">— Ne partage aucune information hors de cet espace.</p>
+                        <p class="mystical-text">— Chaque action doit rester confidentielle.</p>
+                        <p class="mystical-text">Discrétion. Loyauté. Silence.</p>
+                    </div>
+                    
+                    <button class="fortress-btn primary" onclick="showSection('driver-dashboard-section')">
+                        <span class="btn-icon">◉</span>
+                        <span>Prêt à livrer ?</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Driver Dashboard Section -->
+            <section id="driver-dashboard-section" class="section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="logout()">←</button>
+                    <h2>TABLEAU DU LIVREUR</h2>
+                </div>
+                
+                <div class="driver-status">
+                    <p>Statut actuel : <span id="driver-status">🟢 En ligne</span></p>
+                </div>
+
+                <div class="driver-actions">
+                    <button class="fortress-btn primary" onclick="toggleDriverStatus()">
+                        <span class="btn-icon">◉</span>
+                        <span id="status-btn">Se mettre hors ligne</span>
+                    </button>
+                    
+                    <button class="fortress-btn secondary" onclick="requestRecharge()">
+                        <span class="btn-icon">↻</span>
+                        <span>Se recharger</span>
+                    </button>
+                    
+                    <button class="fortress-btn secondary" onclick="showSection('driver-archives-section')">
+                        <span class="btn-icon">📜</span>
+                        <span>Archives</span>
+                    </button>
+                </div>
+
+                <div class="driver-stock">
+                    <p>Stock actuel : <span id="driver-stock">10</span> produits</p>
+                </div>
+            </section>
+
+            <!-- Driver Archives Section -->
+            <section id="driver-archives-section" class="section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="showSection('driver-dashboard-section')">←</button>
+                    <h2>ARCHIVES</h2>
+                </div>
+                
+                <div class="archives-content">
+                    <div class="mystical-border">
+                        <h2>ARCHIVES DE LA FORTERESSE</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">— #2471 • 3 articles • Livraison validée</p>
+                        <p class="mystical-text">— #2468 • 2 articles • Livraison validée</p>
+                        <p class="mystical-text">— #2464 • 4 articles • Livraison validée</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Supplier Welcome Section -->
+            <section id="supplier-welcome-section" class="section">
+                <div class="welcome-content">
+                    <div class="mystical-border">
+                        <h2>ESPACE RAVITAILLEUR</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">— Identité reconnue : @username</p>
+                        <p class="mystical-text">— Statut : Gardien du ravitaillement</p>
+                    </div>
+                    
+                    <div class="mystical-border">
+                        <h2>SERMENT DU RAVITAILLEUR</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">— Le stock de la Forteresse doit toujours être prêt.</p>
+                        <p class="mystical-text">— Chaque messager doit repartir équipé.</p>
+                        <p class="mystical-text">— Chaque passage doit être vérifié.</p>
+                        <p class="mystical-text">— Le lieu de ravitaillement doit rester discret.</p>
+                    </div>
+                    
+                    <button class="fortress-btn primary" onclick="showSection('supplier-dashboard-section')">
+                        <span class="btn-icon">◉</span>
+                        <span>Prêt à gérer le ravitaillement ?</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Supplier Dashboard Section -->
+            <section id="supplier-dashboard-section" class="section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="logout()">←</button>
+                    <h2>TABLEAU DU RAVITAILLEUR</h2>
+                </div>
+                
+                <div class="supplier-info">
+                    <p>— Réseau de messagers actif</p>
+                    <p>— Points de recharge surveillés</p>
+                </div>
+
+                <div class="supplier-actions">
+                    <button class="fortress-btn primary" onclick="showSection('supplier-requests-section')">
+                        <span class="btn-icon">📦</span>
+                        <span>Demandes de recharge</span>
+                    </button>
+                    
+                    <button class="fortress-btn secondary" onclick="showSection('supplier-history-section')">
+                        <span class="btn-icon">📜</span>
+                        <span>Historique des ravitaillements</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Supplier Requests Section -->
+            <section id="supplier-requests-section" class="section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="showSection('supplier-dashboard-section')">←</button>
+                    <h2>DEMANDES DE RECHARGE</h2>
+                </div>
+                
+                <div class="requests-content">
+                    <div class="mystical-border">
+                        <h2>AUCUNE DEMANDE EN ATTENTE</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">Aucun messager n'a demandé de réassort.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Supplier History Section -->
+            <section id="supplier-history-section" class="section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="showSection('supplier-dashboard-section')">←</button>
+                    <h2>REGISTRE DE RAVITAILLEMENT</h2>
+                </div>
+                
+                <div class="history-content">
+                    <div class="mystical-border">
+                        <h2>ARCHIVES DES PASSAGES</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">— Messager : @livreur • Stock remis : 10 produits</p>
+                        <p class="mystical-text">— Messager : @livreur2 • Stock remis : 10 produits</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Welcome Section -->
+            <section id="admin-welcome-section" class="section">
+                <div class="welcome-content">
+                    <div class="mystical-border">
+                        <h2>ESPACE ADMIN</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">— Identité reconnue : @admin</p>
+                        <p class="mystical-text">— Statut : Gardien de la Forteresse</p>
+                    </div>
+                    
+                    <div class="mystical-border">
+                        <h2>SERMENT DES GARDIENS</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">— Les décisions du cercle sont irrévocables.</p>
+                        <p class="mystical-text">— Chaque action est inscrite dans le registre.</p>
+                        <p class="mystical-text">— Les initiés doivent être surveillés.</p>
+                        <p class="mystical-text">— Rien ne doit échapper au regard de la Forteresse.</p>
+                    </div>
+                    
+                    <button class="fortress-btn primary" onclick="showSection('admin-dashboard-section')">
+                        <span class="btn-icon">◉</span>
+                        <span>Ouvrir le tableau</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Admin Dashboard Section -->
+            <section id="admin-dashboard-section" class="section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="logout()">←</button>
+                    <h2>TABLEAU DES GARDIENS</h2>
+                </div>
+                
+                <div class="admin-info">
+                    <p>— Système actif</p>
+                    <p>— Surveillance du cercle en cours</p>
+                </div>
+
+                <div class="admin-actions">
+                    <button class="fortress-btn primary" onclick="showSection('admin-orders-section')">
+                        <span class="btn-icon">📜</span>
+                        <span>Registre des commandes</span>
+                    </button>
+                    
+                    <button class="fortress-btn secondary" onclick="showSection('admin-users-section')">
+                        <span class="btn-icon">👥</span>
+                        <span>Gestion des initiés</span>
+                    </button>
+                    
+                    <button class="fortress-btn secondary" onclick="showSection('admin-stats-section')">
+                        <span class="btn-icon">📊</span>
+                        <span>Statistiques du cercle</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Admin Orders Section -->
+            <section id="admin-orders-section" class="section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="showSection('admin-dashboard-section')">←</button>
+                    <h2>REGISTRE DES COMMANDES</h2>
+                </div>
+                
+                <div class="orders-content">
+                    <div class="mystical-border">
+                        <h2>DERNIÈRES INVOCATIONS</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">— #204 • @client • Pizza truffe • 32€</p>
+                        <p class="mystical-text">— #203 • @client2 • Menu Chicken • 45€</p>
+                        <p class="mystical-text">— #202 • @client3 • Ice x2 • 140€</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Users Section -->
+            <section id="admin-users-section" class="section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="showSection('admin-dashboard-section')">←</button>
+                    <h2>GESTION DES INITIÉS</h2>
+                </div>
+                
+                <div class="users-content">
+                    <div class="mystical-border">
+                        <h2>INITIÉS ACTIFS</h2>
+                        <div class="divider"></div>
+                        <p class="mystical-text">— @client • Client • 12 commandes</p>
+                        <p class="mystical-text">— @client2 • Client • 8 commandes</p>
+                        <p class="mystical-text">— @livreur • Livreur • En ligne</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Stats Section -->
+            <section id="admin-stats-section" class="section">
+                <div class="section-header">
+                    <button class="back-btn" onclick="showSection('admin-dashboard-section')">←</button>
+                    <h2>STATISTIQUES DU CERCLE</h2>
+                </div>
+                
+                <div class="stats-content">
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">◉</span>
+                            <span class="stat-value">156</span>
+                            <span class="stat-label">Commandes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">★</span>
+                            <span class="stat-value">2340€</span>
+                            <span class="stat-label">Chiffre d'affaires</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">◉</span>
+                            <span class="stat-value">12</span>
+                            <span class="stat-label">Livreurs actifs</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Loading Section -->
             <section id="loading-section" class="section">
                 <div class="loading-content">
@@ -231,7 +547,7 @@
             <section id="success-section" class="section">
                 <div class="success-content">
                     <div class="success-icon">◉</div>
-                    <h2>INVOCATION SCELLEE</h2>
+                    <h2>INVOCATION SCELLÉE</h2>
                     <p>La Forteresse a reçu ton invocation.</p>
                     <p>Un messager sera bientôt assigné.</p>
                     <button class="fortress-btn primary" onclick="resetApp()">

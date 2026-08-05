@@ -1,241 +1,283 @@
 // ===== TELEGRAM WEB APP INITIALIZATION =====
 let tg = window.Telegram.WebApp;
-tg.ready();
 tg.expand();
 
-// Enable haptic feedback
-function hapticFeedback(type = 'light') {
-    if (tg.HapticFeedback) {
-        if (type === 'light') {
-            tg.HapticFeedback.impactOccurred('light');
-        } else if (type === 'medium') {
-            tg.HapticFeedback.impactOccurred('medium');
-        } else if (type === 'heavy') {
-            tg.HapticFeedback.impactOccurred('heavy');
-        } else if (type === 'success') {
-            tg.HapticFeedback.notificationOccurred('success');
-        } else if (type === 'error') {
-            tg.HapticFeedback.notificationOccurred('error');
-        }
-    }
-}
+// ===== ACCESS CODES =====
+const ACCESS_CODES = {
+    'CLIENT1': { role: 'client', username: '@initie' },
+    'LIVREUR75001': { role: 'driver', username: '@livreur' },
+    'RAVITAILLEUR666': { role: 'supplier', username: '@ravitailleur' },
+    'adminfafa666': { role: 'admin', username: '@admin' }
+};
 
-// ===== MENU ITEMS CONFIGURATION =====
+// ===== MENU ITEMS =====
 const MENU_ITEMS = {
-    ice: { name: 'Ice', price: 70, emoji: '❄️' },
-    flash: { name: 'Flash', price: 10, emoji: '⚡' },
-    clover: { name: 'Clover', price: 50, emoji: '☘️' }
+    'ice': { name: 'Ice', price: 70, medal: 'I', emoji: '✦' },
+    'flash': { name: 'Flash', price: 10, medal: 'II', emoji: '⚡' },
+    'clover': { name: 'Clover', price: 50, medal: 'III', emoji: '☘' }
 };
 
-// ===== CART STATE =====
-let cart = {
-    ice: 0,
-    flash: 0,
-    clover: 0
+// ===== APP STATE =====
+let currentRole = null;
+let cart = {};
+let userStats = {
+    orders: 0,
+    loyalty: '☆☆☆☆☆',
+    referrals: 0
 };
 
-// ===== USER DATA =====
-let userData = {
-    username: tg.initDataUnsafe?.user?.username || 'Initié',
-    orderCount: 0,
-    loyaltyStars: 0,
-    refCount: 0,
-    personalCode: 'CLI-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase()
-};
-
-// ===== SECTION NAVIGATION =====
+// ===== NAVIGATION =====
 function showSection(sectionId) {
-    hapticFeedback('light');
-    
     // Hide all sections
     document.querySelectorAll('.section').forEach(section => {
         section.classList.remove('active');
     });
     
     // Show target section
-    document.getElementById(sectionId).classList.add('active');
-    
-    // Scroll to top
-    window.scrollTo(0, 0);
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.add('active');
+    }
 }
 
-// ===== CART MANAGEMENT =====
+// ===== AUTHENTICATION =====
+function authenticate() {
+    const codeInput = document.getElementById('auth-code');
+    const code = codeInput.value.trim().toUpperCase();
+    const errorDisplay = document.getElementById('auth-error');
+    
+    if (ACCESS_CODES[code]) {
+        currentRole = ACCESS_CODES[code].role;
+        errorDisplay.textContent = '';
+        
+        // Generate random personal code
+        const personalCode = generatePersonalCode(code);
+        document.getElementById('personal-code').textContent = personalCode;
+        
+        // Update username
+        document.getElementById('profile-username').textContent = ACCESS_CODES[code].username;
+        
+        // Navigate to appropriate welcome section
+        switch(currentRole) {
+            case 'client':
+                showSection('client-welcome-section');
+                break;
+            case 'driver':
+                showSection('driver-welcome-section');
+                break;
+            case 'supplier':
+                showSection('supplier-welcome-section');
+                break;
+            case 'admin':
+                showSection('admin-welcome-section');
+                break;
+        }
+        
+        // Clear input
+        codeInput.value = '';
+        
+        // Haptic feedback
+        if (tg.HapticFeedback) {
+            tg.HapticFeedback.notificationOccurred('success');
+        }
+    } else {
+        errorDisplay.textContent = 'Sceau invalide. Réessaie.';
+        codeInput.value = '';
+        
+        // Haptic feedback
+        if (tg.HapticFeedback) {
+            tg.HapticFeedback.notificationOccurred('error');
+        }
+    }
+}
+
+function generatePersonalCode(baseCode) {
+    const prefixes = {
+        'CLIENT1': 'CLI',
+        'LIVREUR75001': 'LIV',
+        'RAVITAILLEUR666': 'RAV',
+        'adminfafa666': 'ADM'
+    };
+    
+    const prefix = prefixes[baseCode] || 'UNK';
+    const randomPart = Math.random().toString(36).substring(2, 6).toUpperCase();
+    const randomPart2 = Math.random().toString(36).substring(2, 6).toUpperCase();
+    
+    return `${prefix}-${randomPart}-${randomPart2}`;
+}
+
+function logout() {
+    currentRole = null;
+    cart = {};
+    showSection('auth-section');
+    
+    // Reset cart display
+    updateCartDisplay();
+    
+    // Haptic feedback
+    if (tg.HapticFeedback) {
+        tg.HapticFeedback.notificationOccurred('warning');
+    }
+}
+
+// ===== MENU FUNCTIONALITY =====
 function updateQty(item, change) {
-    hapticFeedback('light');
-    
-    cart[item] = Math.max(0, cart[item] + change);
-    
-    // Update display
-    document.getElementById(`qty-${item}`).textContent = cart[item];
-    
-    // Update cart summary
-    updateCartSummary();
-}
-
-function updateCartSummary() {
-    const total = calculateTotal();
-    document.getElementById('total-price').textContent = `${total}€`;
-    
-    const cartItemsDiv = document.getElementById('cart-items');
-    const hasItems = Object.values(cart).some(qty => qty > 0);
-    
-    if (!hasItems) {
-        cartItemsDiv.innerHTML = '<p class="empty-cart">Panier vide</p>';
-        return;
+    if (!cart[item]) {
+        cart[item] = 0;
     }
     
-    let html = '';
+    cart[item] += change;
+    
+    if (cart[item] < 0) {
+        cart[item] = 0;
+    }
+    
+    // Update display
+    const qtyElement = document.getElementById(`qty-${item}`);
+    if (qtyElement) {
+        qtyElement.textContent = cart[item];
+    }
+    
+    // Update cart display
+    updateCartDisplay();
+    
+    // Haptic feedback
+    if (tg.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred('light');
+    }
+}
+
+function updateCartDisplay() {
+    const cartItemsElement = document.getElementById('cart-items');
+    const totalPriceElement = document.getElementById('total-price');
+    
+    let total = 0;
+    let cartHTML = '';
+    let hasItems = false;
+    
     for (const [item, qty] of Object.entries(cart)) {
         if (qty > 0) {
-            const itemTotal = qty * MENU_ITEMS[item].price;
-            html += `
+            hasItems = true;
+            const itemInfo = MENU_ITEMS[item];
+            const itemTotal = itemInfo.price * qty;
+            total += itemTotal;
+            
+            cartHTML += `
                 <div class="cart-item">
-                    <span>${qty} × ${MENU_ITEMS[item].emoji} ${MENU_ITEMS[item].name}</span>
+                    <span>${itemInfo.medal} ${itemInfo.name} x${qty}</span>
                     <span>${itemTotal}€</span>
                 </div>
             `;
         }
     }
-    cartItemsDiv.innerHTML = html;
-}
-
-function calculateTotal() {
-    let total = 0;
-    for (const [item, qty] of Object.entries(cart)) {
-        total += qty * MENU_ITEMS[item].price;
-    }
-    return total;
-}
-
-// ===== ORDER FLOW =====
-function proceedToOrder() {
-    const total = calculateTotal();
     
-    if (total === 0) {
-        tg.showAlert('Panier vide ! Ajoute des articles avant de valider.');
-        hapticFeedback('error');
+    if (!hasItems) {
+        cartHTML = '<p class="empty-cart">Panier vide</p>';
+    }
+    
+    cartItemsElement.innerHTML = cartHTML;
+    totalPriceElement.textContent = `${total}€`;
+}
+
+function proceedToOrder() {
+    // Check if cart has items
+    let hasItems = false;
+    for (const qty of Object.values(cart)) {
+        if (qty > 0) {
+            hasItems = true;
+            break;
+        }
+    }
+    
+    if (!hasItems) {
+        alert('Ton panier est vide. Sélectionne des articles avant de valider.');
         return;
     }
     
-    hapticFeedback('medium');
-    
     // Update order summary
-    const orderSummaryDiv = document.getElementById('order-items-summary');
-    let html = '';
+    const orderSummaryElement = document.getElementById('order-items-summary');
+    let summaryHTML = '';
+    let total = 0;
+    
     for (const [item, qty] of Object.entries(cart)) {
         if (qty > 0) {
-            html += `<p>${qty} × ${MENU_ITEMS[item].emoji} ${MENU_ITEMS[item].name} — ${qty * MENU_ITEMS[item].price}€</p>`;
+            const itemInfo = MENU_ITEMS[item];
+            const itemTotal = itemInfo.price * qty;
+            total += itemTotal;
+            
+            summaryHTML += `
+                <div class="cart-item">
+                    <span>${itemInfo.medal} ${itemInfo.name} x${qty}</span>
+                    <span>${itemTotal}€</span>
+                </div>
+            `;
         }
     }
-    orderSummaryDiv.innerHTML = html;
+    
+    orderSummaryElement.innerHTML = summaryHTML;
     document.getElementById('order-total').textContent = `${total}€`;
     
-    showSection('order-section');
+    showSection('client-order-section');
 }
 
 function submitOrder() {
     const address = document.getElementById('address').value.trim();
     const digicode = document.getElementById('digicode').value.trim();
-    const interphone = document.getElementById('interphone').value.trim();
     
     if (!address) {
-        tg.showAlert('Adresse requise !');
-        hapticFeedback('error');
+        alert('Entre ton adresse complète.');
         return;
     }
     
     if (!digicode) {
-        tg.showAlert('Digicode requis !');
-        hapticFeedback('error');
+        alert('Entre le digicode de l\'immeuble.');
         return;
     }
     
-    hapticFeedback('heavy');
+    // Update user stats
+    userStats.orders++;
+    document.getElementById('order-count').textContent = userStats.orders;
     
-    // Prepare order data
-    const orderData = {
-        cart: cart,
-        address: address,
-        digicode: digicode,
-        interphone: interphone,
-        total: calculateTotal(),
-        timestamp: new Date().toISOString()
-    };
-    
-    // Send data to bot
-    if (tg.sendData) {
-        tg.sendData(JSON.stringify(orderData));
-    } else {
-        // Fallback for testing
-        console.log('Order data:', orderData);
-        simulateOrderProcess();
-    }
-}
-
-function simulateOrderProcess() {
+    // Show loading
     showSection('loading-section');
     
-    // Animate loading steps
-    const steps = document.querySelectorAll('.loading-step');
+    // Simulate loading steps
+    simulateLoading();
+}
+
+function simulateLoading() {
+    const steps = ['step1', 'step2', 'step3'];
     let currentStep = 0;
     
-    const interval = setInterval(() => {
-        if (currentStep > 0) {
-            steps[currentStep - 1].classList.remove('active');
-        }
-        
+    function activateNextStep() {
         if (currentStep < steps.length) {
-            steps[currentStep].classList.add('active');
+            const stepElement = document.getElementById(steps[currentStep]);
+            stepElement.classList.add('active');
             currentStep++;
+            
+            setTimeout(activateNextStep, 1500);
         } else {
-            clearInterval(interval);
+            // Show success after loading
             setTimeout(() => {
                 showSection('success-section');
-                hapticFeedback('success');
-                
-                // Update user stats
-                userData.orderCount++;
-                userData.loyaltyStars = Math.min(5, Math.floor(userData.orderCount / 5));
-                updateProfileDisplay();
-            }, 500);
+            }, 1000);
         }
-    }, 1500);
-}
-
-// ===== PROFILE MANAGEMENT =====
-function updateProfileDisplay() {
-    document.getElementById('profile-username').textContent = `@${userData.username}`;
-    document.getElementById('order-count').textContent = userData.orderCount;
-    document.getElementById('loyalty-stars').textContent = '⭐'.repeat(userData.loyaltyStars) + '☆'.repeat(5 - userData.loyaltyStars);
-    document.getElementById('ref-count').textContent = userData.refCount;
-    document.getElementById('personal-code').textContent = userData.personalCode;
-}
-
-function showReferral() {
-    hapticFeedback('light');
-    const referralCode = 'REF-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-    
-    tg.showAlert(`Code de parrainage : ${referralCode}\n\nEnvoie ce code à la personne que tu souhaites parrainer. Elle devra l'entrer au /start.`);
-}
-
-function showSupport() {
-    hapticFeedback('light');
-    tg.showAlert('Pour contacter la Forteresse, utilise le bouton "Contacter la Forteresse" dans le bot Telegram principal.');
-}
-
-// ===== APP RESET =====
-function resetApp() {
-    hapticFeedback('medium');
-    
-    // Reset cart
-    cart = { ice: 0, flash: 0, clover: 0 };
-    
-    // Reset displays
-    for (const item of Object.keys(cart)) {
-        document.getElementById(`qty-${item}`).textContent = '0';
     }
     
-    updateCartSummary();
+    activateNextStep();
+}
+
+function resetApp() {
+    // Clear cart
+    cart = {};
+    
+    // Reset quantities
+    for (const item of Object.keys(MENU_ITEMS)) {
+        const qtyElement = document.getElementById(`qty-${item}`);
+        if (qtyElement) {
+            qtyElement.textContent = '0';
+        }
+    }
     
     // Clear form
     document.getElementById('address').value = '';
@@ -247,54 +289,78 @@ function resetApp() {
         step.classList.remove('active');
     });
     
-    showSection('welcome-section');
+    // Update cart display
+    updateCartDisplay();
+    
+    // Return to menu
+    showSection('client-menu-section');
 }
 
-// ===== INITIALIZE =====
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize profile display
-    updateProfileDisplay();
+// ===== DRIVER FUNCTIONALITY =====
+let driverOnline = true;
+
+function toggleDriverStatus() {
+    driverOnline = !driverOnline;
     
-    // Setup theme based on Telegram
-    if (tg.themeParams) {
-        document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#0a0a0a');
-        document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#ecf0f1');
+    const statusElement = document.getElementById('driver-status');
+    const statusBtn = document.getElementById('status-btn');
+    
+    if (driverOnline) {
+        statusElement.textContent = '🟢 En ligne';
+        statusBtn.textContent = 'Se mettre hors ligne';
+    } else {
+        statusElement.textContent = '🔴 Hors ligne';
+        statusBtn.textContent = 'Se mettre en ligne';
     }
     
-    // Handle back button
-    tg.BackButton.onClick(() => {
+    // Haptic feedback
+    if (tg.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred('medium');
+    }
+}
+
+function requestRecharge() {
+    alert('Demande de recharge envoyée à la Forteresse. Un ravitailleur te contactera bientôt.');
+    
+    // Haptic feedback
+    if (tg.HapticFeedback) {
+        tg.HapticFeedback.notificationOccurred('success');
+    }
+}
+
+// ===== SUPPLIER FUNCTIONALITY =====
+// Placeholder for supplier-specific functions
+
+// ===== ADMIN FUNCTIONALITY =====
+// Placeholder for admin-specific functions
+
+// ===== CLIENT PROFILE FUNCTIONALITY =====
+function showReferral() {
+    alert('Ton code de parrainage : ' + document.getElementById('personal-code').textContent + '\nPartage-le avec de nouveaux initiés.');
+}
+
+function showSupport() {
+    alert('Un message sera envoyé à la Forteresse. Les gardiens te répondront bientôt.');
+}
+
+// ===== KEYBOARD SUPPORT =====
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
         const activeSection = document.querySelector('.section.active');
-        if (activeSection && activeSection.id !== 'welcome-section') {
-            showSection('welcome-section');
-        } else {
-            tg.close();
+        if (activeSection && activeSection.id === 'auth-section') {
+            authenticate();
         }
-    });
-    
-    // Show back button when not on welcome section
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.target.classList.contains('active')) {
-                if (mutation.target.id !== 'welcome-section') {
-                    tg.BackButton.show();
-                } else {
-                    tg.BackButton.hide();
-                }
-            }
-        });
-    });
-    
-    document.querySelectorAll('.section').forEach(section => {
-        observer.observe(section, { attributes: true, attributeFilter: ['class'] });
-    });
+    }
 });
 
-// ===== KEYBOARD SHORTCUTS =====
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        const activeSection = document.querySelector('.section.active');
-        if (activeSection && activeSection.id !== 'welcome-section') {
-            showSection('welcome-section');
-        }
+// ===== INITIALIZE =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Telegram WebApp
+    if (tg) {
+        tg.ready();
+        tg.expand();
     }
+    
+    // Set initial theme
+    document.body.style.backgroundColor = 'var(--void-black)';
 });
