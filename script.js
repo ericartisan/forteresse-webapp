@@ -1,6 +1,40 @@
 // ===== TELEGRAM WEB APP INITIALIZATION =====
 let tg = window.Telegram.WebApp;
-tg.expand();
+try {
+    tg.expand();
+} catch (e) {
+    console.log('Telegram WebApp not available');
+}
+
+// ===== HAPTIC FEEDBACK WRAPPER =====
+function hapticFeedback(type) {
+    if (tg && tg.HapticFeedback) {
+        try {
+            switch(type) {
+                case 'success':
+                    tg.HapticFeedback.notificationOccurred('success');
+                    break;
+                case 'error':
+                    tg.HapticFeedback.notificationOccurred('error');
+                    break;
+                case 'warning':
+                    tg.HapticFeedback.notificationOccurred('warning');
+                    break;
+                case 'light':
+                    tg.HapticFeedback.impactOccurred('light');
+                    break;
+                case 'medium':
+                    tg.HapticFeedback.impactOccurred('medium');
+                    break;
+                case 'heavy':
+                    tg.HapticFeedback.impactOccurred('heavy');
+                    break;
+            }
+        } catch (e) {
+            console.log('Haptic feedback not available');
+        }
+    }
+}
 
 // ===== ACCESS CODES =====
 const ACCESS_CODES = {
@@ -77,17 +111,13 @@ function authenticate() {
         codeInput.value = '';
         
         // Haptic feedback
-        if (tg.HapticFeedback) {
-            tg.HapticFeedback.notificationOccurred('success');
-        }
+        hapticFeedback('success');
     } else {
         errorDisplay.textContent = 'Sceau invalide. Réessaie.';
         codeInput.value = '';
         
         // Haptic feedback
-        if (tg.HapticFeedback) {
-            tg.HapticFeedback.notificationOccurred('error');
-        }
+        hapticFeedback('error');
     }
 }
 
@@ -115,9 +145,7 @@ function logout() {
     updateCartDisplay();
     
     // Haptic feedback
-    if (tg.HapticFeedback) {
-        tg.HapticFeedback.notificationOccurred('warning');
-    }
+    hapticFeedback('warning');
 }
 
 // ===== MENU FUNCTIONALITY =====
@@ -142,9 +170,7 @@ function updateQty(item, change) {
     updateCartDisplay();
     
     // Haptic feedback
-    if (tg.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred('light');
-    }
+    hapticFeedback('light');
 }
 
 function updateCartDisplay() {
@@ -314,18 +340,14 @@ function toggleDriverStatus() {
     }
     
     // Haptic feedback
-    if (tg.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred('medium');
-    }
+    hapticFeedback('medium');
 }
 
 function requestRecharge() {
     alert('Demande de recharge envoyée à la Forteresse. Un ravitailleur te contactera bientôt.');
     
     // Haptic feedback
-    if (tg.HapticFeedback) {
-        tg.HapticFeedback.notificationOccurred('success');
-    }
+    hapticFeedback('success');
 }
 
 // ===== SUPPLIER FUNCTIONALITY =====
@@ -356,11 +378,15 @@ document.addEventListener('keydown', function(event) {
 // ===== INITIALIZE =====
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Telegram WebApp
-    if (tg) {
-        tg.ready();
-        tg.expand();
+    try {
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+    } catch (e) {
+        console.log('Telegram WebApp initialization failed');
     }
     
     // Set initial theme
-    document.body.style.backgroundColor = 'var(--void-black)';
+    document.body.style.backgroundColor = 'var(--deep-black)';
 });
